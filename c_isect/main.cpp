@@ -46,6 +46,14 @@ int main(int argc, char** argv)
         geometry::Point p0_bw(scintillator_below_0_x, scintillator_below_0_y, scintillator_below_0_z);
         geometry::Point p1_bw(scintillator_below_1_x, scintillator_below_1_y, scintillator_below_1_z);
 
+        const std::pair<geometry::Point, geometry::Point> poca_pts =
+                geometry::lineIntersect3D(p0_ab, p1_ab, p0_bw, p1_bw);
+
+//        printf("%f\n", geometry::distance(poca_pts.first, poca_pts.second) );
+        if (geometry::distance(poca_pts.first, poca_pts.second) > 0.01) { // big poca distance means abd sample
+            continue;
+        }
+
         const std::pair<geometry::Point, geometry::Point> isect_pts =
                 geometry::lineIntersect2D(p0_ab, p1_ab, p0_bw, p1_bw);
 

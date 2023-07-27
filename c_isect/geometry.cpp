@@ -12,6 +12,8 @@ namespace geometry {
     void VoxelMap2D::addLineVoxel(std::vector<size_t>& lineVoxels, int x, int y) const {
         if (x >= 0 && y >= 0 && x + y * x_bins < x_bins * y_bins)
             lineVoxels.push_back((x + y * x_bins));
+//        else
+//            std::cout << x << ", " << y << std::endl;
     }
 
     // get voxels from line using Bresenham's algorithm
@@ -215,6 +217,36 @@ namespace geometry {
         double theta = std::acos(dot / (mag_p21 * mag_p43));
 
         return theta;
+    }
+
+    const std::pair<Point, Point> lineIntersect3D(const Point &p1, const Point &p2, const Point &p3, const Point &p4) {
+        Point p13, p43, p21;
+
+        p13.x = p1.x - p3.x;
+        p13.y = p1.y - p3.y;
+        p13.z = p1.z - p3.z;
+        p43.x = p4.x - p3.x;
+        p43.y = p4.y - p3.y;
+        p43.z = p4.z - p3.z;
+
+        p21.x = p2.x - p1.x;
+        p21.y = p2.y - p1.y;
+        p21.z = p2.z - p1.z;
+
+        const double d1343 = p13.x * p43.x + p13.y * p43.y + p13.z * p43.z;
+        const double d4321 = p43.x * p21.x + p43.y * p21.y + p43.z * p21.z;
+        const double d1321 = p13.x * p21.x + p13.y * p21.y + p13.z * p21.z;
+        const double d4343 = p43.x * p43.x + p43.y * p43.y + p43.z * p43.z;
+        const double d2121 = p21.x * p21.x + p21.y * p21.y + p21.z * p21.z;
+
+        const double denom = d2121 * d4343 - d4321 * d4321;
+        const double numer = d1343 * d4321 - d1321 * d4343;
+
+        const double mua = numer / denom;
+        const double mub = (d1343 + d4321 * (mua)) / d4343;
+
+        return std::make_pair(Point(p1.x + mua * p21.x, p1.y + mua * p21.y, p1.z + mua * p21.z),
+                              Point(p3.x + mub * p43.x, p3.y + mub * p43.y, p3.z + mub * p43.z));
     }
 
     void sub_v3_v3v3(double r[3], const double a[3], const double b[3]) {

@@ -62,6 +62,7 @@ namespace geometry
 
 
     double theta(const Point& p1, const Point& p2, const Point& p3, const Point& p4);
+    const std::pair<Point,Point> lineIntersect3D(const Point&, const Point&, const Point&, const Point&);
     std::pair<Point,Point> lineIntersect2D(const Point&, const Point&, const Point&, const Point&);
     double distance(const Point&, const Point&);
 
